@@ -1,18 +1,14 @@
 from typing import Union
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from fastapi.responses import Response
-from pydantic import BaseModel
+from fastapi.responses import HTMLResponse, Response
 import requests
 import random
 import json
+from enum import Enum
+
 
 app = FastAPI()
 
-class Item(BaseModel):
-	name: str
-	price : float
-	is_offer: Union[bool, None] = None
 
 @app.get("/")
 def read_root():
@@ -44,20 +40,51 @@ async def read_img(num:int):
 	img = requests.get(url, stream=True).content
 	return Response(content=img, media_type="image")
 
-@app.get("/stations_velo", response_class=Response)
-async def read_velo(id : int) :
+
+
+@app.get("/stations_velo")
+async def read_velo(id:str,
+		    		addr:Union[str, None]=None,
+					cap:Union[str, None]=None
+					) :
 	url = "https://www.juleshaag.fr/devIA/devAPI/station_information.json"
-	velo = requests.get(url)
-	velo = eval(velo.text)
-	velo = json.dumps(velo["data"]["stations"][id])
-	return Response(velo)
+	stations = requests.get(url)
+	stations = eval(stations.text)["data"]["stations"]
+
+	if id =="toutes" and cap == "":
+		cap_total = 0
+		for station in stations :
+			cap_total += station["capacity"]
+		return cap_total
+
+	else :
+		if addr == "" :
+			return stations[int(id)]["address"]
+		elif cap == "" :
+			return stations[int(id)]["capacity"]
+		else :
+			return json.dumps(stations[int(id)]).encode('utf8')
+	
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
 
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-	return{"item_name": item.name, "item_id": item_id}
+@app.get("/stations_velo/{id}/{info}")
+async def read2_velo(id : str, info : Union[str, None] = None) :
+	url = "https://www.juleshaag.fr/devIA/devAPI/station_information.json"
+	stations = requests.get(url)
+	stations = eval(stations.text)["data"]["stations"]
 
+	if id == "toutes" and info == "cap":
+		cap_total = 0
+		for station in stations :
+			cap_total += station["capacity"]
+		return cap_total
+	
+	else :
+		if info == "addr" :
+			return stations[int(id)]["address"]
+		elif info == "cap" :
+			return stations[int(id)]["capacity"]
+		else :
+			return json.dumps(stations[int(id)]).encode('utf8')
+	
