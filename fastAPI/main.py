@@ -63,7 +63,7 @@ async def read_velo(id:str,
 		elif cap == "" :
 			return stations[int(id)]["capacity"]
 		else :
-			return json.dumps(stations[int(id)]).encode('utf8')
+			return json.dumps(stations[int(id)], ensure_ascii=False).encode('utf8')
 	
 
 

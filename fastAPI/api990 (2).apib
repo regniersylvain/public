@@ -1,0 +1,120 @@
+FORMAT: 1A
+HOST: http://localhost:8000/stations_velo?id=3
+
+# API : FastAPI
+
+
+Cette API est créée à l'aide de FastAPI et contient plusieurs routes pour effectuer diverses tâches.
+
+Routes
+/ (GET)
+Retourne un message de salutation.
+
+Exemple de réponse :
+
+json
+Copy code
+{
+    "Hello": "World"
+}
+/val (GET)
+Retourne un nombre aléatoire compris entre 0 et 100 si aucun paramètre n'est fourni. Si un nombre est fourni en tant que paramètre, renvoie une liste de nombres aléatoires de longueur égale au nombre fourni.
+
+Paramètres :
+
+nb (optionnel, entier) : nombre de valeurs aléatoires à retourner.
+Exemples de réponse :
+
+/val :
+
+Copy code
+42
+/val?nb=5 :
+
+json
+Copy code
+{
+    "nb": 5,
+    "valeurs": [
+        731,
+        -822,
+        537,
+        745,
+        -399
+    ]
+}
+/calc/add (GET)
+Retourne la somme de deux nombres entiers.
+
+Paramètres :
+
+n1 (entier) : premier nombre.
+n2 (entier) : deuxième nombre.
+Exemple de réponse :
+
+/calc/add?n1=10&n2=5 :
+
+Copy code
+15
+/calc/prod (GET)
+Retourne le produit de deux nombres entiers sous forme d'une page HTML.
+
+Paramètres :
+
+n1 (entier) : premier nombre.
+n2 (entier) : deuxième nombre.
+Exemple de réponse :
+
+/calc/prod?n1=10&n2=5 :
+
+php
+Copy code
+<html><head></head><body><h1> 10 x 5 = 50</h1></body></html>
+/img (GET)
+Retourne une image PNG à partir de l'URL spécifiée.
+
+Paramètres :
+
+num (entier) : identifiant de l'image à retourner.
+Exemple de réponse :
+
+/img?num=42 :
+
+arduino
+Copy code
+(image PNG)
+/stations_velo (GET)
+Retourne des informations sur une station de vélo ou la somme totale de la capacité de toutes les stations.
+
+Paramètres :
+
+id (chaîne) : identifiant de la station à interroger. Si la valeur est "toutes", la somme totale de la capacité de toutes les stations sera retournée.
+addr (optionnel, chaîne) : retourne l'adresse de la station si la valeur est "addr".
+cap (optionnel, chaîne) : retourne la capacité de la station si la valeur est "cap".
+Exemples de réponse :
+
+/stations_velo?id=toutes :
+
+Copy code
+145
+/stations_velo?id=0&addr :
+
+arduino
+Copy code
+"Rue du Faubourg Saint-Antoine - 75012 Paris"
+/stations_velo?id=0&cap :
+
+Copy code
+45
+/stations_velo?id=0 :
+
+json
+Copy code
+{
+    "station_id": "101",
+    "name": "101 - RUE DU FAUBOURG SAINT-ANTOINE - 75012 PARIS",
+    "address": "Rue
+
+
+
+
